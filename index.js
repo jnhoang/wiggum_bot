@@ -31,7 +31,7 @@ bot.on('message', (data) => {
     return;
   }
   
-  console.log('data:', data);
+  // console.log('data:', data);
 
   // if anything after handle message, need to add await keyword in front of handleMessage()
   handleMessage(data);
@@ -42,19 +42,14 @@ bot.on('message', (data) => {
 const handleMessage = async(data) => {
   const message     = data.text;
   const allChannels = await getChannelList();
-  const channelName     = allChannels.filter((channel) => channel.id === data.channel)[0].name;
-  console.log('name: ', channelName)
+  const channelName = allChannels.filter((channel) => channel.id === data.channel)[0].name;
   const keywords    = ['ralph quote', APP_USERNAME, CREATOR_USERNAME];
-  
-  console.log('message: ', message)
-  console.log ('channel to post to: ', channel);
-  console.log ('channel name: ', channelName);
   
   if (hasMentionKeywords(message, keywords)) {
     quote = getRandomQuote();
-    bot.postMessageToChannel(channel, quote, EMOJI_OBJ)
+    bot.postMessageToChannel(channelName, quote, EMOJI_OBJ)
   }
-  // else if (message.includes(' ralph gif')) {
+  // else if (message.includes('ralph gif')) {
 
   // }
 }
