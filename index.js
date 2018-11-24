@@ -3,55 +3,55 @@ const SlackBot = require('slackbots');
 const axios    = require ('axios');
 
 const QUOTES    = require('./ralph_quotes.json');
-const EMOJI_OBJ = { icon_emoji: ':ralph_wiggum:' }
-
+const EMOJI_OBJ = { icon_emoji: ':ralph_wiggum:' };
+const APP_USERNAME = process.env.APP_USERNAME;
+const CREATOR_USERNAME = process.env.CREATOR_USERNAME;
 console.log('1: ', QUOTES.length)
 
 
-// const bot = new SlackBot({
-//   token: process.env.SLACK_TOKEN,
-//   name: 'ralph_wiggum'
-// });
+const bot = new SlackBot({
+  token: process.env.SLACK_TOKEN,
+  name: 'ralph_wiggum'
+});
 
 
-// // START HANDLER
-// bot.on('start', () => bot.postMessageToChannel('test_channel', 'Hi!', EMOJI_OBJ) );
+// START HANDLER
+bot.on('start', () => bot.postMessageToChannel('test_channel', 'Hi!', EMOJI_OBJ) );
 
 
-// // ERROR HANDLER
-// bot.on('error', (error) => console.log(error))
+// ERROR HANDLER
+bot.on('error', (error) => console.log(error))
 
 
-// // MESSAGE HANDLER
-// BOT.on('message', (data) => {
-//   if (data.type !== 'message') {
-//     return;
-//   }
-//   console.log('data:', data);
+// MESSAGE HANDLER
+bot.on('message', (data) => {
+  if (data.type !== 'message') {
+    return;
+  }
+  
+  console.log('data:', data);
+  handleMessage(data.text);
+})
 
-//   handleMessage(data.text);
-// })
 
 
 function handleMessage(message) {
-  if (message.includes(' ralph quote')) {
-    getRandomQuote();
+  const keywords = ['ralph quote', APP_USERNAME, CREATOR_USERNAME];
+  console.log('message: ', message)
+  
+  if (hasMentionKeywords(message, keywords)) {
+    quote = getRandomQuote();
+    bot.postMessageToChannel('test_channel', quote, EMOJI_OBJ)
   }
-  else if (message.includes(' ralph gif')) {
-    
-  }
-}
+  // else if (message.includes(' ralph gif')) {
 
-
-const getRandomQuote = () => {
-  const qoutesLen = QUOTES.length;
-  const quote     = QUOTES[getRandomNum(qoutesLen)];
-  return quote;
+  // }
 }
 
 
 const getRandomNum = (len) => Math.floor((Math.random() * len) + 1);
+const getRandomQuote = () => QUOTES[getRandomNum(QUOTES.length)];
+const hasMentionKeywords = (msg, keywordsArr) => keywordsArr.some((keyword) => msg.includes(keyword));
 
 
-
-console.log(getRandomQuote());
+// console.log(getRandomQuote());
