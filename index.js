@@ -2,29 +2,32 @@ require('dotenv').config()
 const SlackBot = require('slackbots');
 const axios    = require ('axios');
 
+const quotes = require('./ralph_quotes.json');
+
+console.log('1: ', quotes.length)
+
 
 const bot = new SlackBot({
   token: process.env.SLACK_TOKEN,
   name: 'ralph_wiggum'
 });
 
-// Start Handler
-bot.on('start', () => {
-  const params = { icon_emoji: ':ralph_wiggum:' };
-  bot.postMessageToChannel('test_channel', 'Hi!', params);
-});
+const EMOJI_OBJ = { icon_emoji: ':ralph_wiggum:' }
+
+// START HANDLER
+bot.on('start', () => bot.postMessageToChannel('test_channel', 'Hi!', EMOJI_OBJ) );
 
 
-// Error Handler
+// ERROR HANDLER
 bot.on('error', (error) => console.log(error))
 
 
-// Message handler
-bot.on('message', (data) => {
+// MESSAGE HANDLER
+BOT.on('message', (data) => {
   if (data.type !== 'message') {
     return;
   }
-  console.log('data:', data)
+  console.log('data:', data);
 
   handleMessage(data.text);
 })
